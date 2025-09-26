@@ -30,7 +30,7 @@ export const UserProvider = ({ children }) => {
         }
 
         axios
-            .get('https://inventario-back-oq4u.onrender.com/v1/users/profile', {
+            .get('https://inventario-back-oq4u.onrender.com/almacenadora/v1/users/profile', {
                 headers: { 'x-token': token }
             })
             .then((res) => {
