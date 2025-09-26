@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: 'http://127.0.0.1:3000/almacenadora/v1',
+    baseURL: 'https://inventario-back-oq4u.onrender.com/almacenadora/v1',
     timeout: 5000
 })
 
@@ -263,57 +263,6 @@ export const getTop3 = async () => {
     }
 }
 
-export const getClients = async (limite = 12, desde = 0) => {
-    try {
-        return await apiClient.get(`/clients?limite=${limite}&desde=${desde}`)
-    } catch (e) {
-        const msg = e.response?.data?.msg || 'Error desconocido';
-        return {
-            error: true,
-            msg,
-            e,
-        };
-    }
-}
-
-export const saveClients = async (data) => {
-    try {
-        return await apiClient.post('/clients', data)
-    } catch (e) {
-        const msg = e.response?.data?.msg || 'Error desconocido';
-        return {
-            error: true,
-            msg,
-            e,
-        };
-    }
-}
-
-export const updateClient = async (id, data) => {
-    try {
-        return await apiClient.put(`/clients/${id}`, data)
-    } catch (e) {
-        const msg = e.response?.data?.msg || 'Error desconocido';
-        return {
-            error: true,
-            msg,
-            e,
-        };
-    }
-}
-
-export const deleteClient = async (id) => {
-    try {
-        return await apiClient.delete(`/clients/${id}`)
-    } catch (e) {
-        const msg = e.response?.data?.msg || 'Error desconocido';
-        return {
-            error: true,
-            msg,
-            e,
-        };
-    }
-}
 
 export const getCategory = async (limite = 10, desde = 0) => {
     try {
