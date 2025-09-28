@@ -161,18 +161,6 @@ export const Login = ({ switchAuthHandler }) => {
                                 </Button>
                             </VStack>
                         </form>
-                        <Text textAlign="center">
-                            No tienes cuenta{" "}
-                            <Box
-                                as="span"
-                                fontWeight="bold"
-                                color="blue.300"
-                                cursor="pointer"
-                                onClick={switchAuthHandler}
-                            >
-                                Registrate
-                            </Box>
-                        </Text>
 
                     </Stack>
                 </Box>

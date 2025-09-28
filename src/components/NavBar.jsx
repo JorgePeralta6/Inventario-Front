@@ -63,18 +63,6 @@ export default function NavBar() {
 
   const bgColor = useColorModeValue("gray.100", "gray.900");
 
-  const [avatarURL, setAvatarURL] = useState();
-
-  useEffect(() => {
-    const profilePicturaFecth = async () => {
-      const response = await fetch('https://randomuser.me/api/');
-      const data = await response.json();
-      const profilePicUrl = data.results[0].picture.large;
-      setAvatarURL(profilePicUrl);
-    };
-
-    profilePicturaFecth();
-  }, []);
 
   const handleLogout = () => {
     logout();
@@ -132,22 +120,12 @@ export default function NavBar() {
                 cursor={"pointer"}
                 minW={0}
               >
-                <Avatar
-                  size={"sm"}
-                  src={
-                    avatarURL
-                  }
-                />
+                <Avatar size={"sm"} />
               </MenuButton>
               <MenuList alignItems={"center"}>
                 <br />
                 <Center>
-                  <Avatar
-                    size={"2xl"}
-                    src={
-                      avatarURL
-                    }
-                  />
+                  <Avatar size={"2xl"} />
                 </Center>
                 <br />
                 <Center>

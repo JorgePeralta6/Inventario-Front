@@ -34,8 +34,6 @@ export const UsersCards = ({
 
     const location = useLocation();
 
-    const [avatarURL, setAvatarURL] = useState('');
-
     const [userData, setUserData] = useState({
         id,
         name,
@@ -46,19 +44,6 @@ export const UsersCards = ({
         role,
         password
     });
-
-    useEffect(() => {
-        const fetchAvatar = async () => {
-            try {
-                const response = await fetch('https://randomuser.me/api/');
-                const data = await response.json();
-                setAvatarURL(data.results[0].picture.large);
-            } catch (error) {
-                console.error('Error al cargar avatar:', error);
-            }
-        };
-        fetchAvatar();
-    }, []);
 
     useEffect(() => {
         if (routeId === String(id)) {
@@ -84,7 +69,6 @@ export const UsersCards = ({
         } else {
             console.error('Error en updateUser:', response.e.response?.data || response.e);
         }
-
     };
 
     const handleDeleteSettings = async (oldData) => {
@@ -116,22 +100,20 @@ export const UsersCards = ({
                         transform: 'scale(1.05)',
                         boxShadow: '3xl',
                     }}
-
                 >
+                    {/* Banner de paisaje aleatorio */}
                     <Image
                         h={'120px'}
                         w={'full'}
                         src={`https://picsum.photos/400/200?random=${id}`}
                         objectFit="cover"
                         alt={`Banner de ${name}`}
-
-
                     />
 
+                    {/* Avatar por defecto */}
                     <Flex justify={'center'} mt={-12}>
                         <Avatar
                             size={'xl'}
-                            src={avatarURL}
                             css={{ border: '2px solid white' }}
                         />
                     </Flex>
