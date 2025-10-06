@@ -370,3 +370,16 @@ export const getMovimientoSalida = async (data) => {
         };
     }
 }
+
+export const updateMovement = async (id, data) => {
+    try {
+        return await apiClient.put(`/movements/${id}`, data)
+    } catch (e) {
+        const msg = e.response?.data?.msg || 'Error desconocido';
+        return {
+            error: true,
+            msg,
+            e,
+        };
+    }
+}

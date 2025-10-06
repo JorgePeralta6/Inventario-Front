@@ -1,3 +1,4 @@
+// shared/hooks/useMovimientos.js - ACTUALIZADO
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { getMovimientos as getMovimientosRequest, getMovimientosByDate } from "../../services/api";
@@ -30,6 +31,7 @@ export const useMovimientos = () => {
 
       if (res.data?.movements && Array.isArray(res.data.movements)) {
         const formatted = res.data.movements.map((movimiento) => ({
+          _id: movimiento._id, // IMPORTANTE: Agregamos el ID
           producto:
             movimiento.product === "Data not found"
               ? "Producto no disponible"
@@ -42,7 +44,7 @@ export const useMovimientos = () => {
           fecha: dayjs(movimiento.date).format("DD/MM/YYYY HH:mm:ss"),
           razon: movimiento.reason || "N/A",
           destino: movimiento.destiny || "N/A",
-          tipo: (!movimiento.reason && !movimiento.destiny) ? "Entrada" : "Salida"
+          tipo: (!movimiento.destiny) ? "Entrada" : "Salida"
         }));
         setTableData(formatted);
       } else {

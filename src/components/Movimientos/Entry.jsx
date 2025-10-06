@@ -21,6 +21,7 @@ export const Entry = ({ switchEntryHandler }) => {
   const [formState, setFormState] = useState({
     productId: { value: "", isValid: true, showError: false },
     quantity: { value: "", isValid: true, showError: false },
+    reason: { value: "", isValid: true, showError: false },
   });
 
   const handleInputValueChange = (value, field) => {
@@ -34,14 +35,15 @@ export const Entry = ({ switchEntryHandler }) => {
     e.preventDefault();
     registrarMovimientoEntrada(
       formState.productId.value,
-      Number(formState.quantity.value)
+      Number(formState.quantity.value),
+      formState.reason.value
     );
   };
 
   useEffect(() => {
     getProducts();
   }, []);
-  
+
 
   const formBackground = useColorModeValue("white", "gray.700");
   const labelColor = useColorModeValue("gray.700", "gray.200");
@@ -77,6 +79,17 @@ export const Entry = ({ switchEntryHandler }) => {
                     type="number"
                     value={formState.quantity.value}
                     onChange={(e) => handleInputValueChange(e.target.value, 'quantity')}
+                  />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel color={labelColor}>Motivo</FormLabel>
+                  <Input
+                    type="text"
+                    value={formState.reason.value}
+                    onChange={(e) =>
+                      handleInputValueChange(e.target.value, "reason")
+                    }
                   />
                 </FormControl>
 

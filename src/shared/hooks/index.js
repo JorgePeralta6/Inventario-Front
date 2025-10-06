@@ -11,3 +11,4 @@ export	{ useEarnings } from "./useEarnings";
 export { useTopProduct } from "./useTopProduct";
 export { useCategories } from "./useCategories";
 export { useMovimientos } from "./useGetMovements";
+export { useUpdateMovement } from "./useUpdateMovement"

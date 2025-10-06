@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import {
   Table, Thead, Tbody, Tr, Th, Td, TableCaption, Box, Heading,
-  Button, useColorModeValue, Input, HStack
+  Button, useColorModeValue, Input, HStack, useDisclosure
 } from '@chakra-ui/react';
 import { useMovimientos } from '../../shared/hooks';
-import dayjs from 'dayjs';
+import { EditMovementModal } from './EditMovementModal';
 
 const MovimientosTableComponent = () => {
-  const { tableData, getMovimientos } = useMovimientos();
+  const { tableData, movimientos, getMovimientos } = useMovimientos();
   const [hasFetched, setHasFetched] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [selectedMovement, setSelectedMovement] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const entradaBg = useColorModeValue('green.300', 'green.500');
   const salidaBg = useColorModeValue('red.300', 'red.500');
@@ -27,8 +29,19 @@ const MovimientosTableComponent = () => {
     }
   };
 
-  const sortedData = [...tableData].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+  const handleRowClick = (movimiento) => {
+    // Solo abrir modal si es una salida
+    if (movimiento.tipo === 'Salida') {
+      setSelectedMovement(movimiento);
+      onOpen();
+    }
+  };
 
+  const handleUpdateSuccess = () => {
+    fetchData(); // Recargar los datos
+  };
+
+  const sortedData = [...tableData].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
   useEffect(() => {
     if (!hasFetched) {
@@ -73,7 +86,13 @@ const MovimientosTableComponent = () => {
             <Tr
               key={index}
               bg={movimiento.tipo === 'Entrada' ? entradaBg : salidaBg}
-              _hover={{ bg: movimiento.tipo === 'Entrada' ? entradaHover : salidaHover }}
+              _hover={{ 
+                bg: movimiento.tipo === 'Entrada' ? entradaHover : salidaHover,
+                cursor: movimiento.tipo === 'Salida' ? 'pointer' : 'default',
+                transform: movimiento.tipo === 'Salida' ? 'scale(1.01)' : 'none',
+                transition: 'all 0.2s'
+              }}
+              onClick={() => handleRowClick(movimiento)}
             >
               <Td>{movimiento.producto}</Td>
               <Td>{movimiento.cantidad}</Td>
@@ -86,9 +105,15 @@ const MovimientosTableComponent = () => {
           ))}
         </Tbody>
       </Table>
+
+      <EditMovementModal
+        isOpen={isOpen}
+        onClose={onClose}
+        movement={selectedMovement}
+        onSuccess={handleUpdateSuccess}
+      />
     </Box>
   );
 };
 
 export default MovimientosTableComponent;
-

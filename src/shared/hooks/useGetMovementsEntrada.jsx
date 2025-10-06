@@ -7,10 +7,10 @@ export const useEntry = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const registrarMovimientoEntrada = async (productId, quantity) => {
+  const registrarMovimientoEntrada = async (productId, quantity, reason) => {
     setIsLoading(true);
     try {
-      const response = await getMovimientoEntradaRequest({ productId, quantity });
+      const response = await getMovimientoEntradaRequest({ productId, quantity, reason });
       console.log('IDK', response);
 
       setIsLoading(false);
