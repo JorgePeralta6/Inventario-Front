@@ -1,34 +1,19 @@
-import { useState } from 'react'
-import { Login } from '../components/Login'
-import { Register } from '../components/Register'
 import { Box } from '@chakra-ui/react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
+import { Login } from '../components/Login'
 
 const MotionBox = motion(Box)
 
 const Auth = () => {
-    const [isLogin, setIsLogin] = useState(true)
-
-    const handleAuthPageToggle = () => {
-        setIsLogin((prev) => !prev)
-    }
-
+    // Animación para el contenido
     const variants = {
         hidden: { opacity: 0, y: 30, transition: { duration: 0.4 } },
         visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
         exit: { opacity: 0, y: -30, transition: { duration: 0.4 } }
     }
 
-    const backgroundVariants = {
-        login: {
-            background: "linear-gradient(135deg,rgb(197, 71, 71),rgba(161, 196, 253, 0.34))",
-            transition: { duration: 0.6 }
-        },
-        register: {
-            background: "linear-gradient(135deg, rgba(161, 196, 253, 0.34), rgb(197, 71, 71))",
-            transition: { duration: 0.6 }
-        }
-    }
+    // Fondo fijo (puedes cambiar los colores como quieras)
+    const background = "linear-gradient(135deg,rgb(197, 71, 71),rgba(161, 196, 253, 0.34))"
 
     return (
         <MotionBox
@@ -36,38 +21,19 @@ const Auth = () => {
             display="flex"
             alignItems="center"
             justifyContent="center"
-            initial={false}
-            animate={isLogin ? "login" : "register"}
-            variants={backgroundVariants}
             p={4}
+            bg={background}
         >
-            <AnimatePresence mode="wait">
-                {isLogin ? (
-                    <MotionBox
-                        key="login"
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        variants={variants}
-                        width="100%"
-                        maxW="400px"
-                    >
-                        <Login switchAuthHandler={handleAuthPageToggle} />
-                    </MotionBox>
-                ) : (
-                    <MotionBox
-                        key="register"
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        variants={variants}
-                        width="100%"
-                        maxW="400px"
-                    >
-                        <Register switchAuthHandler={handleAuthPageToggle} />
-                    </MotionBox>
-                )}
-            </AnimatePresence>
+            <MotionBox
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                variants={variants}
+                width="100%"
+                maxW="400px"
+            >
+                <Login />
+            </MotionBox>
         </MotionBox>
     )
 }
