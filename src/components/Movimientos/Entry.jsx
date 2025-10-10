@@ -12,17 +12,36 @@ import {
   Heading,
   Flex,
   Select,
+  InputGroup,
+  InputLeftElement,
+  Text,
 } from "@chakra-ui/react";
+import { Search } from "lucide-react";
 
 export const Entry = ({ switchEntryHandler }) => {
   const { registrarMovimientoEntrada, isLoading } = useEntry();
   const { products, getProducts } = useProduct();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   const [formState, setFormState] = useState({
     productId: { value: "", isValid: true, showError: false },
     quantity: { value: "", isValid: true, showError: false },
     reason: { value: "", isValid: true, showError: false },
   });
+
+  useEffect(() => {
+    getProducts();
+  }, []);
+
+  useEffect(() => {
+    if (products) {
+      const filtered = products.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [products, searchTerm]);
 
   const handleInputValueChange = (value, field) => {
     setFormState((prevState) => ({
@@ -40,11 +59,6 @@ export const Entry = ({ switchEntryHandler }) => {
     );
   };
 
-  useEffect(() => {
-    getProducts();
-  }, []);
-
-
   const formBackground = useColorModeValue("white", "gray.700");
   const labelColor = useColorModeValue("gray.700", "gray.200");
   const buttonColor = useColorModeValue("red.500", "red.800");
@@ -55,8 +69,21 @@ export const Entry = ({ switchEntryHandler }) => {
         <Box flex="1" bg={formBackground} p={8} borderRadius="md" boxShadow="dark-lg" maxW="md" w="full">
           <Stack spacing={4}>
             <Heading fontSize="3xl" textAlign="center">Registrar Entrada</Heading>
-            <form onSubmit={handleEntrySubmit}>
+            <Box as="form" onSubmit={handleEntrySubmit}>
               <VStack spacing={4}>
+                <FormControl>
+                  <FormLabel color={labelColor}>Buscar Producto</FormLabel>
+                  <InputGroup>
+                    <InputLeftElement pointerEvents="none">
+                      <Search size={18} />
+                    </InputLeftElement>
+                    <Input
+                      placeholder="Escribe para buscar..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </InputGroup>
+                </FormControl>
 
                 <FormControl>
                   <FormLabel color={labelColor}>Producto</FormLabel>
@@ -65,12 +92,17 @@ export const Entry = ({ switchEntryHandler }) => {
                     value={formState.productId.value}
                     onChange={(e) => handleInputValueChange(e.target.value, 'productId')}
                   >
-                    {products?.map((producto) => (
+                    {filteredProducts?.map((producto) => (
                       <option key={producto._id} value={producto._id}>
                         {producto.name}
                       </option>
                     ))}
                   </Select>
+                  {searchTerm && filteredProducts.length === 0 && (
+                    <Text mt={2} fontSize="sm" color="gray.500">
+                      No se encontraron productos
+                    </Text>
+                  )}
                 </FormControl>
 
                 <FormControl>
@@ -87,9 +119,7 @@ export const Entry = ({ switchEntryHandler }) => {
                   <Input
                     type="text"
                     value={formState.reason.value}
-                    onChange={(e) =>
-                      handleInputValueChange(e.target.value, "reason")
-                    }
+                    onChange={(e) => handleInputValueChange(e.target.value, "reason")}
                   />
                 </FormControl>
 
@@ -107,7 +137,7 @@ export const Entry = ({ switchEntryHandler }) => {
                   Volver a Movimientos
                 </Button>
               </VStack>
-            </form>
+            </Box>
           </Stack>
         </Box>
       </Stack>

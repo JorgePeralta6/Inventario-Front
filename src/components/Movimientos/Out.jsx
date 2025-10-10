@@ -11,7 +11,11 @@ import {
   Heading,
   Flex,
   Select,
+  InputGroup,
+  InputLeftElement,
+  Text,
 } from "@chakra-ui/react";
+import { Search } from "lucide-react";
 import { useSalida } from "../../shared/hooks";
 import { useProduct } from "../../shared/hooks/useProducts";
 
@@ -19,6 +23,8 @@ export const Out = ({ switchOutHandler }) => {
   const { registrarMovimientoSalida, isLoading } = useSalida();
   const { getProducts, products } = useProduct();
   const [productList, setProductList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   const [formState, setFormState] = useState({
     productId: { value: "", isValid: true, showError: false },
@@ -34,8 +40,18 @@ export const Out = ({ switchOutHandler }) => {
   useEffect(() => {
     if (products) {
       setProductList(products);
+      setFilteredProducts(products);
     }
   }, [products]);
+
+  useEffect(() => {
+    if (productList) {
+      const filtered = productList.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [productList, searchTerm]);
 
   const handleInputValueChange = (value, field) => {
     setFormState((prevState) => ({
@@ -73,8 +89,22 @@ export const Out = ({ switchOutHandler }) => {
             <Heading fontSize="3xl" textAlign="center">
               Registrar Salida
             </Heading>
-            <form onSubmit={handleOutSubmit}>
+            <Box as="form" onSubmit={handleOutSubmit}>
               <VStack spacing={4}>
+                <FormControl>
+                  <FormLabel color={labelColor}>Buscar Producto</FormLabel>
+                  <InputGroup>
+                    <InputLeftElement pointerEvents="none">
+                      <Search size={18} />
+                    </InputLeftElement>
+                    <Input
+                      placeholder="Escribe para buscar..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </InputGroup>
+                </FormControl>
+
                 <FormControl>
                   <FormLabel color={labelColor}>Producto</FormLabel>
                   <Select
@@ -84,12 +114,17 @@ export const Out = ({ switchOutHandler }) => {
                       handleInputValueChange(e.target.value, "productId")
                     }
                   >
-                    {productList.map((product) => (
+                    {filteredProducts.map((product) => (
                       <option key={product._id} value={product._id}>
                         {product.name}
                       </option>
                     ))}
                   </Select>
+                  {searchTerm && filteredProducts.length === 0 && (
+                    <Text mt={2} fontSize="sm" color="gray.500">
+                      No se encontraron productos
+                    </Text>
+                  )}
                 </FormControl>
 
                 <FormControl>
@@ -139,7 +174,7 @@ export const Out = ({ switchOutHandler }) => {
                   Volver a Movimientos
                 </Button>
               </VStack>
-            </form>
+            </Box>
           </Stack>
         </Box>
       </Stack>

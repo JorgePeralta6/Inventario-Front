@@ -14,9 +14,10 @@ import {
   Stack,
   SimpleGrid
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useProductUtils } from "../../shared/hooks/useProductUtils";
 import { getProducts, saveProducts, updateProducts } from "../../services";
+import { UserContext } from "../../context/UserContext";
 import toast from "react-hot-toast";
 import "../../pages/products/ProductPage.css";
 
@@ -27,6 +28,8 @@ const formatDate = (isoDate) => {
 
 export const ProductFormModal = ({ isOpen, onClose, productToEdit, onProductSaved }) => {
   const { categories } = useProductUtils();
+  const { user } = useContext(UserContext);
+  const isAdmin = user?.role === "ADMIN_ROLE";
 
   const [form, setForm] = useState({
     name: "",
@@ -54,7 +57,6 @@ export const ProductFormModal = ({ isOpen, onClose, productToEdit, onProductSave
         image: String(productToEdit.image) || "",
         hasExpiration: productToEdit?.hasExpiration || false,
         expirationDate: productToEdit?.expirationDate ? formatDate(productToEdit.expirationDate) : "",
-
       });
     } else {
       setForm({
@@ -83,9 +85,7 @@ export const ProductFormModal = ({ isOpen, onClose, productToEdit, onProductSave
         });
       }
     }
-
   }, [productToEdit, isOpen, categories]);
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,7 +94,7 @@ export const ProductFormModal = ({ isOpen, onClose, productToEdit, onProductSave
 
   const handleSubmit = async () => {
     if (!form.category) {
-      return toast.error("Debe seleccionar una categoría y un proveedor", {
+      return toast.error("Debe seleccionar una categoría", {
         style: {
           background: 'red',
           color: 'white',
@@ -103,11 +103,17 @@ export const ProductFormModal = ({ isOpen, onClose, productToEdit, onProductSave
       });
     }
 
+    const dataToSend = { ...form };
+
+    if (!isAdmin && productToEdit) {
+      delete dataToSend.stock;
+    }
+
     let res;
     if (productToEdit) {
-      res = await updateProducts(productToEdit._id, form);
+      res = await updateProducts(productToEdit._id, dataToSend);
     } else {
-      res = await saveProducts(form);
+      res = await saveProducts(dataToSend);
     }
 
     if (res?.error) {
@@ -135,11 +141,8 @@ export const ProductFormModal = ({ isOpen, onClose, productToEdit, onProductSave
     setForm(prev => ({ ...prev, [name]: checked }));
   };
 
-
-
   return (
     <>
-
       <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered >
         <ModalOverlay />
         <ModalContent className="modal-form">
@@ -157,10 +160,20 @@ export const ProductFormModal = ({ isOpen, onClose, productToEdit, onProductSave
                 <Input name="description" value={form.description} onChange={handleChange} />
               </FormControl>
 
-
               <FormControl isRequired>
-                <FormLabel>Stock</FormLabel>
-                <Input type="number" name="stock" value={form.stock} onChange={handleChange} />
+                <FormLabel>
+                  Stock {!isAdmin && productToEdit && "(Solo Administrador)"}
+                </FormLabel>
+                <Input 
+                  type="number" 
+                  name="stock" 
+                  value={form.stock} 
+                  onChange={handleChange}
+                  isDisabled={!isAdmin && productToEdit}
+                  bg={!isAdmin && productToEdit ? "gray.100" : "white"}
+                  cursor={!isAdmin && productToEdit ? "not-allowed" : "text"}
+                  opacity={!isAdmin && productToEdit ? 0.6 : 1}
+                />
               </FormControl>
 
               <FormControl isRequired>
