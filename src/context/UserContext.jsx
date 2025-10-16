@@ -65,7 +65,7 @@ export const UserProvider = ({ children }) => {
                 console.error("Token inválido:", e);
                 handleTokenExpired();
             }
-        }, 1000);
+        }, 30000);
 
         return () => clearInterval(interval);
     }, [handleTokenExpired]);

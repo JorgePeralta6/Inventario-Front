@@ -36,13 +36,6 @@ const routes = [
       ]
     },
     {
-        path: '/information/*',
-        element: <PrivateRoute allowedRoles={['ADMIN_ROLE']} />,
-        children: [
-            { path: '', element: <Stats /> }
-        ]
-    },
-    {
         path: '/category/*',
         element: <PrivateRoute allowedRoles={['ADMIN_ROLE', 'EMPLOYEE_ROLE']} />,
         children: [
