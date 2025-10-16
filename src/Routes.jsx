@@ -6,7 +6,6 @@ const ViewUsers = lazy(() => import('./components/ViewUsers'));
 const ProductsPage = lazy(() => import('./pages/products/ProductPage'));
 const PrivateRoute = lazy(() => import('./components/PrivateRoute'));
 const UnauthorizedModal = lazy(() => import('./components/UnauthorizedModal'));
-const Stats = lazy(() => import('./pages/Stats'));
 const CategoryPage = lazy(() => import('./components/category/CategoryPage'));
 const Movimientos = lazy(() => import('./pages/Movimientos'));
 
