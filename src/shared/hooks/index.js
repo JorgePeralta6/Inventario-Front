@@ -4,11 +4,6 @@ export { useRegister } from "./useRegister";
 export { useLogin } from "./useLogin";
 export { logout } from "./useLogout";
 export { useProduct } from './useProducts';
-export { useStats } from "./useStats";
-export { usePercentage } from "./usePercentage";
-export { useTotalClients } from "./useTotalCLientes";
-export	{ useEarnings } from "./useEarnings";
-export { useTopProduct } from "./useTopProduct";
 export { useCategories } from "./useCategories";
 export { useMovimientos } from "./useGetMovements";
 export { useUpdateMovement } from "./useUpdateMovement"
